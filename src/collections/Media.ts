@@ -12,5 +12,23 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    imageSizes: [
+      {
+        name: 'navigation',
+        width: 100,
+        height: 50,
+        fit: 'contain',
+        background: 'transparent',
+      },
+      {
+        // Square 2x source for the 56px course logo tile in the course mega menu.
+        name: 'logo',
+        width: 112,
+        height: 112,
+        fit: 'contain',
+        background: 'transparent',
+      },
+    ],
+  },
 }

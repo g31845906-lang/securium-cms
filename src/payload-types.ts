@@ -69,6 +69,20 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    pages: Page;
+    courses: Course;
+    'blog-posts': BlogPost;
+    'blog-categories': BlogCategory;
+    authors: Author;
+    banners: Banner;
+    categories: Category;
+    faqs: Faq;
+    testimonials: Testimonial;
+    'success-stories': SuccessStory;
+    enquiries: Enquiry;
+    universities: University;
+    clients: Client;
+    'awards-and-recognitions': AwardsAndRecognition;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,17 +92,35 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
+    'blog-posts': BlogPostsSelect<false> | BlogPostsSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
+    authors: AuthorsSelect<false> | AuthorsSelect<true>;
+    banners: BannersSelect<false> | BannersSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'success-stories': SuccessStoriesSelect<false> | SuccessStoriesSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    universities: UniversitiesSelect<false> | UniversitiesSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
+    'awards-and-recognitions': AwardsAndRecognitionsSelect<false> | AwardsAndRecognitionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'contact-settings': ContactSetting;
+  };
+  globalsSelect: {
+    'contact-settings': ContactSettingsSelect<false> | ContactSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -122,7 +154,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -148,7 +180,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -161,13 +193,913 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    navigation?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    logo?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  slug: string;
+  /**
+   * Optional banner image displayed behind the page title on the frontend.
+   */
+  heroImage?: (number | null) | Media;
+  sections?:
+    | (
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            highlight?: string | null;
+            description: string;
+            backgroundMedia?: (number | null) | Media;
+            primaryButtonLabel?: string | null;
+            primaryButtonUrl?: string | null;
+            secondaryButtonLabel?: string | null;
+            secondaryButtonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutHero';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            /**
+             * Paste the HTTPS YouTube or Vimeo embed URL (the src value from the iframe).
+             */
+            videoUrl?: string | null;
+            /**
+             * Optional uploaded video. If provided, it takes precedence over the iframe URL.
+             */
+            video?: (number | null) | Media;
+            /**
+             * Optional image shown when neither a video upload nor a valid iframe URL is provided.
+             */
+            media?: (number | null) | Media;
+            note?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutProfile';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description?: string | null;
+            values?:
+              | {
+                  title: string;
+                  description: string;
+                  /**
+                   * Enter Font Awesome class name(s), for example: fa-solid fa-shield-halved
+                   */
+                  icon?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutValues';
+          }
+        | {
+            heading?: string | null;
+            statistics?:
+              | {
+                  value: number;
+                  suffix?: string | null;
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutStatistics';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description?: string | null;
+            /**
+             * Optional YouTube or Vimeo embed URL.
+             */
+            videoUrl?: string | null;
+            /**
+             * Optional uploaded video. Takes precedence over the embed URL.
+             */
+            video?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutStory';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description?: string | null;
+            featureImage?: (number | null) | Media;
+            featureHeading?: string | null;
+            featureDescription?: string | null;
+            join: {
+              eyebrow?: string | null;
+              heading: string;
+              description?: string | null;
+              opportunities?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              buttonLabel?: string | null;
+              buttonUrl?: string | null;
+            };
+            members?:
+              | {
+                  name: string;
+                  designation?: string | null;
+                  photo?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutTeam';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description?: string | null;
+            awards?:
+              | {
+                  title: string;
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutAwards';
+          }
+        | {
+            eyebrow?: string | null;
+            heading: string;
+            description?: string | null;
+            partners?:
+              | {
+                  name: string;
+                  logo: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutPartners';
+          }
+        | {
+            heading: string;
+            description?: string | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutCallToAction';
+          }
+        | {
+            heading: string;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            /**
+             * Select an image or video from the media library.
+             */
+            image?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'aboutUs';
+          }
+        | {
+            heading: string;
+            reasons?:
+              | {
+                  title: string;
+                  description: string;
+                  /**
+                   * Optional icon name or short label.
+                   */
+                  icon?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'whyChooseUs';
+          }
+        | {
+            heading: string;
+            mission: {
+              title: string;
+              content: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              };
+            };
+            vision: {
+              title: string;
+              content: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              };
+            };
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'missionVision';
+          }
+        | {
+            heading?: string | null;
+            banners?: (number | Banner)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'banner';
+          }
+        | {
+            heading: string;
+            courses?: (number | Course)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'popularCourses';
+          }
+        | {
+            heading: string;
+            partners?: (number | Client)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'partners';
+          }
+        | {
+            heading: string;
+            features?:
+              | {
+                  title: string;
+                  description: string;
+                  image?: (number | null) | Media;
+                  icon?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'features';
+          }
+        | {
+            heading: string;
+            testimonials?: (number | Testimonial)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'testimonials';
+          }
+        | {
+            heading: string;
+            faqs?: (number | Faq)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'faqs';
+          }
+        | {
+            heading: string;
+            posts?: (number | BlogPost)[] | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'blogPosts';
+          }
+        | {
+            heading: string;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            certificates?:
+              | {
+                  title: string;
+                  image?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'certificates';
+          }
+      )[]
+    | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma-separated keywords.
+     */
+    keywords?: string | null;
+    /**
+     * Leave empty to use the default URL for this document.
+     */
+    canonicalURL?: string | null;
+    noIndex?: boolean | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners".
+ */
+export interface Banner {
+  id: number;
+  duplicateAction?: string | null;
+  heading: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image: number | Media;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: number;
+  title: string;
+  slug: string;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  overview?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  prerequisite?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  targetAudience?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  objectives?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  syllabus?:
+    | {
+        moduleTitle: string;
+        moduleDescription?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  whatYouWillLearn?:
+    | {
+        title: string;
+        items?:
+          | {
+              heading: string;
+              content: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  certificationSection?: {
+    heading?: string | null;
+    description?: string | null;
+    image?: (number | null) | Media;
+    contentHeading?: string | null;
+    contentDescription?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  programHighlights?: {
+    content?: string | null;
+    items?:
+      | {
+          highlight: string;
+          /**
+           * Optional image icon. If both icon options are set, this image is used.
+           */
+          icon?: (number | null) | Media;
+          /**
+           * Optional emoji or Bootstrap icon class, for example bi bi-laptop.
+           */
+          iconText?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  videoSection?: {
+    video?: (number | null) | Media;
+    videoUrl?: string | null;
+    description?: string | null;
+  };
+  toolsAndTechnologies?:
+    | {
+        name: string;
+        image?: (number | null) | Media;
+        info?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  relatedBlog?: (number | BlogPost)[] | null;
+  relatedFAQ?: (number | Faq)[] | null;
+  relatedTestimonials?: (number | Testimonial)[] | null;
+  featured_image?: (number | null) | Media;
+  /**
+   * Square logo or certification badge shown on the course card in the mega menu. Falls back to the category image.
+   */
+  logo?: (number | null) | Media;
+  category?: (number | null) | Category;
+  university?: (number | null) | University;
+  level?: ('Beginner' | 'Intermediate' | 'Advanced' | 'All levels') | null;
+  /**
+   * For example, "8 weeks" or "40 hours".
+   */
+  duration?: string | null;
+  price?: number | null;
+  curriculum?:
+    | {
+        moduleTitle: string;
+        moduleDescription?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma-separated keywords.
+     */
+    keywords?: string | null;
+    /**
+     * Leave empty to use the default URL for this document.
+     */
+    canonicalURL?: string | null;
+    noIndex?: boolean | null;
+  };
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts".
+ */
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug?: string | null;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  featuredImage?: (number | null) | Media;
+  categories?: (number | BlogCategory)[] | null;
+  /**
+   * Legacy free-text author label. Select an Author profile for new posts.
+   */
+  author?: string | null;
+  authorProfile?: (number | null) | Author;
+  publishedAt?: string | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  name: string;
+  slug?: string | null;
+  description?: string | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors".
+ */
+export interface Author {
+  id: number;
+  name: string;
+  slug?: string | null;
+  profileImage?: (number | null) | Media;
+  designation?: string | null;
+  shortBiography: string;
+  fullBiography?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  areasOfExpertise?:
+    | {
+        area: string;
+        id?: string | null;
+      }[]
+    | null;
+  socialLinks?:
+    | {
+        platform: string;
+        /**
+         * Enter the full professional profile URL, including https://.
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  profileStatus: 'draft' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category?: string | null;
+  /**
+   * Lower values appear first.
+   */
+  sortOrder?: number | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  name: string;
+  role?: string | null;
+  organization?: string | null;
+  quote: string;
+  photo?: (number | null) | Media;
+  rating?: number | null;
+  isFeatured?: boolean | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  _order?: string | null;
+  name: string;
+  description?: string | null;
+  image?: (number | null) | Media;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "universities".
+ */
+export interface University {
+  id: number;
+  name: string;
+  country?: string | null;
+  website?: string | null;
+  logo?: (number | null) | Media;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: number;
+  name: string;
+  logo: number | Media;
+  website?: string | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "success-stories".
+ */
+export interface SuccessStory {
+  id: number;
+  title: string;
+  /**
+   * A YouTube video link, e.g. https://www.youtube.com/watch?v=… or https://youtu.be/…
+   */
+  youtubeUrl: string;
+  /**
+   * Lower values appear first.
+   */
+  sortOrder?: number | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  course?: (number | null) | Course;
+  message: string;
+  status?: ('New' | 'Contacted' | 'Qualified' | 'Closed') | null;
+  adminNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards-and-recognitions".
+ */
+export interface AwardsAndRecognition {
+  id: number;
+  name: string;
+  description?: string | null;
+  image?: (number | null) | Media;
+  /**
+   * Lower values appear first.
+   */
+  sortOrder?: number | null;
+  isPublished?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -184,20 +1116,76 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'blog-posts';
+        value: number | BlogPost;
+      } | null)
+    | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
+      } | null)
+    | ({
+        relationTo: 'authors';
+        value: number | Author;
+      } | null)
+    | ({
+        relationTo: 'banners';
+        value: number | Banner;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'success-stories';
+        value: number | SuccessStory;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'universities';
+        value: number | University;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: number | Client;
+      } | null)
+    | ({
+        relationTo: 'awards-and-recognitions';
+        value: number | AwardsAndRecognition;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -207,10 +1195,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -230,7 +1218,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -276,6 +1264,607 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        navigation?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        logo?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  heroImage?: T;
+  sections?:
+    | T
+    | {
+        aboutHero?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              highlight?: T;
+              description?: T;
+              backgroundMedia?: T;
+              primaryButtonLabel?: T;
+              primaryButtonUrl?: T;
+              secondaryButtonLabel?: T;
+              secondaryButtonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        aboutProfile?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              videoUrl?: T;
+              video?: T;
+              media?: T;
+              note?: T;
+              id?: T;
+              blockName?: T;
+            };
+        aboutValues?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              values?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    icon?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutStatistics?:
+          | T
+          | {
+              heading?: T;
+              statistics?:
+                | T
+                | {
+                    value?: T;
+                    suffix?: T;
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutStory?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              videoUrl?: T;
+              video?: T;
+              id?: T;
+              blockName?: T;
+            };
+        aboutTeam?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              featureImage?: T;
+              featureHeading?: T;
+              featureDescription?: T;
+              join?:
+                | T
+                | {
+                    eyebrow?: T;
+                    heading?: T;
+                    description?: T;
+                    opportunities?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                    buttonLabel?: T;
+                    buttonUrl?: T;
+                  };
+              members?:
+                | T
+                | {
+                    name?: T;
+                    designation?: T;
+                    photo?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutAwards?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              awards?:
+                | T
+                | {
+                    title?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutPartners?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              description?: T;
+              partners?:
+                | T
+                | {
+                    name?: T;
+                    logo?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        aboutCallToAction?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        aboutUs?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+              blockName?: T;
+            };
+        whyChooseUs?:
+          | T
+          | {
+              heading?: T;
+              reasons?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    icon?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        missionVision?:
+          | T
+          | {
+              heading?: T;
+              mission?:
+                | T
+                | {
+                    title?: T;
+                    content?: T;
+                  };
+              vision?:
+                | T
+                | {
+                    title?: T;
+                    content?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        banner?:
+          | T
+          | {
+              heading?: T;
+              banners?: T;
+              id?: T;
+              blockName?: T;
+            };
+        popularCourses?:
+          | T
+          | {
+              heading?: T;
+              courses?: T;
+              id?: T;
+              blockName?: T;
+            };
+        partners?:
+          | T
+          | {
+              heading?: T;
+              partners?: T;
+              id?: T;
+              blockName?: T;
+            };
+        features?:
+          | T
+          | {
+              heading?: T;
+              features?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    image?: T;
+                    icon?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        testimonials?:
+          | T
+          | {
+              heading?: T;
+              testimonials?: T;
+              id?: T;
+              blockName?: T;
+            };
+        faqs?:
+          | T
+          | {
+              heading?: T;
+              faqs?: T;
+              id?: T;
+              blockName?: T;
+            };
+        blogPosts?:
+          | T
+          | {
+              heading?: T;
+              posts?: T;
+              id?: T;
+              blockName?: T;
+            };
+        certificates?:
+          | T
+          | {
+              heading?: T;
+              description?: T;
+              certificates?:
+                | T
+                | {
+                    title?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        keywords?: T;
+        canonicalURL?: T;
+        noIndex?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  summary?: T;
+  description?: T;
+  overview?: T;
+  prerequisite?: T;
+  targetAudience?: T;
+  objectives?: T;
+  syllabus?:
+    | T
+    | {
+        moduleTitle?: T;
+        moduleDescription?: T;
+        id?: T;
+      };
+  whatYouWillLearn?:
+    | T
+    | {
+        title?: T;
+        items?:
+          | T
+          | {
+              heading?: T;
+              content?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  certificationSection?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        image?: T;
+        contentHeading?: T;
+        contentDescription?: T;
+      };
+  programHighlights?:
+    | T
+    | {
+        content?: T;
+        items?:
+          | T
+          | {
+              highlight?: T;
+              icon?: T;
+              iconText?: T;
+              id?: T;
+            };
+      };
+  videoSection?:
+    | T
+    | {
+        video?: T;
+        videoUrl?: T;
+        description?: T;
+      };
+  toolsAndTechnologies?:
+    | T
+    | {
+        name?: T;
+        image?: T;
+        info?: T;
+        id?: T;
+      };
+  relatedBlog?: T;
+  relatedFAQ?: T;
+  relatedTestimonials?: T;
+  featured_image?: T;
+  logo?: T;
+  category?: T;
+  university?: T;
+  level?: T;
+  duration?: T;
+  price?: T;
+  curriculum?:
+    | T
+    | {
+        moduleTitle?: T;
+        moduleDescription?: T;
+        id?: T;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        keywords?: T;
+        canonicalURL?: T;
+        noIndex?: T;
+      };
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-posts_select".
+ */
+export interface BlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  content?: T;
+  featuredImage?: T;
+  categories?: T;
+  author?: T;
+  authorProfile?: T;
+  publishedAt?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors_select".
+ */
+export interface AuthorsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  profileImage?: T;
+  designation?: T;
+  shortBiography?: T;
+  fullBiography?: T;
+  areasOfExpertise?:
+    | T
+    | {
+        area?: T;
+        id?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  profileStatus?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners_select".
+ */
+export interface BannersSelect<T extends boolean = true> {
+  duplicateAction?: T;
+  heading?: T;
+  content?: T;
+  image?: T;
+  buttonText?: T;
+  buttonLink?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  description?: T;
+  image?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  sortOrder?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  organization?: T;
+  quote?: T;
+  photo?: T;
+  rating?: T;
+  isFeatured?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "success-stories_select".
+ */
+export interface SuccessStoriesSelect<T extends boolean = true> {
+  title?: T;
+  youtubeUrl?: T;
+  sortOrder?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phone?: T;
+  course?: T;
+  message?: T;
+  status?: T;
+  adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "universities_select".
+ */
+export interface UniversitiesSelect<T extends boolean = true> {
+  name?: T;
+  country?: T;
+  website?: T;
+  logo?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  website?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "awards-and-recognitions_select".
+ */
+export interface AwardsAndRecognitionsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  image?: T;
+  sortOrder?: T;
+  isPublished?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +1905,200 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Organization-wide contact details, office and training-center locations, and operating hours.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-settings".
+ */
+export interface ContactSetting {
+  id: number;
+  primaryEmail: string;
+  supportEmail?: string | null;
+  primaryPhone?: string | null;
+  alternatePhone?: string | null;
+  whatsappNumber?: string | null;
+  tollFreeNumber?: string | null;
+  whatsappMessage?: string | null;
+  websiteUrl?: string | null;
+  /**
+   * Department-specific emails or numbers, e.g. Admissions, Careers.
+   */
+  additionalContacts?:
+    | {
+        label: string;
+        type: 'phone' | 'email' | 'other';
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Drag to reorder; the first location is shown first on the site.
+   */
+  locations?:
+    | {
+        name: string;
+        locationType: 'head-office' | 'office' | 'training-center';
+        /**
+         * Main location used in the site header/footer.
+         */
+        isPrimary?: boolean | null;
+        /**
+         * Uncheck to hide this location on the site.
+         */
+        isPublished?: boolean | null;
+        addressLine1: string;
+        addressLine2?: string | null;
+        landmark?: string | null;
+        city: string;
+        state?: string | null;
+        postalCode?: string | null;
+        country?: string | null;
+        mapUrl?: string | null;
+        /**
+         * The src URL from the Google Maps "Embed a map" iframe.
+         */
+        mapEmbedUrl?: string | null;
+        latitude?: number | null;
+        longitude?: number | null;
+        phone?: string | null;
+        alternatePhone?: string | null;
+        email?: string | null;
+        whatsappNumber?: string | null;
+        contactPerson?: string | null;
+        /**
+         * Override the organization hours (Hours & Timings tab) for this location.
+         */
+        useCustomHours?: boolean | null;
+        workingHours?:
+          | {
+              days: ('mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun')[];
+              isClosed?: boolean | null;
+              opensAt?: string | null;
+              closesAt?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * IANA timezone name, e.g. Asia/Kolkata.
+   */
+  timezone?: string | null;
+  /**
+   * Regular weekly hours. Group days that share the same timing, e.g. Mon–Fri 09:30–18:30.
+   */
+  workingHours?:
+    | {
+        days: ('mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun')[];
+        isClosed?: boolean | null;
+        opensAt?: string | null;
+        closesAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Overrides for specific dates such as public holidays.
+   */
+  specialHours?:
+    | {
+        date: string;
+        label?: string | null;
+        isClosed?: boolean | null;
+        opensAt?: string | null;
+        closesAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Extra info shown with the hours, e.g. "Weekend batches by appointment".
+   */
+  hoursNote?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-settings_select".
+ */
+export interface ContactSettingsSelect<T extends boolean = true> {
+  primaryEmail?: T;
+  supportEmail?: T;
+  primaryPhone?: T;
+  alternatePhone?: T;
+  whatsappNumber?: T;
+  tollFreeNumber?: T;
+  whatsappMessage?: T;
+  websiteUrl?: T;
+  additionalContacts?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        value?: T;
+        id?: T;
+      };
+  locations?:
+    | T
+    | {
+        name?: T;
+        locationType?: T;
+        isPrimary?: T;
+        isPublished?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        landmark?: T;
+        city?: T;
+        state?: T;
+        postalCode?: T;
+        country?: T;
+        mapUrl?: T;
+        mapEmbedUrl?: T;
+        latitude?: T;
+        longitude?: T;
+        phone?: T;
+        alternatePhone?: T;
+        email?: T;
+        whatsappNumber?: T;
+        contactPerson?: T;
+        useCustomHours?: T;
+        workingHours?:
+          | T
+          | {
+              days?: T;
+              isClosed?: T;
+              opensAt?: T;
+              closesAt?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  timezone?: T;
+  workingHours?:
+    | T
+    | {
+        days?: T;
+        isClosed?: T;
+        opensAt?: T;
+        closesAt?: T;
+        id?: T;
+      };
+  specialHours?:
+    | T
+    | {
+        date?: T;
+        label?: T;
+        isClosed?: T;
+        opensAt?: T;
+        closesAt?: T;
+        id?: T;
+      };
+  hoursNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

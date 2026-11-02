@@ -7,6 +7,9 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+   allowedDevOrigins: [
+    'tjpajnvo3r.preview.c40.airoapp.ai',
+  ],
   images: {
     localPatterns: [
       {
