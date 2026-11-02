@@ -65,3 +65,64 @@ That's it! The Docker instance will help you get up and running quickly while al
 ## Questions
 
 If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+
+## Pages API for PHP frontends
+
+Payload exposes the Pages collection through its REST API. Replace `https://cms.example.com` with the deployed admin-panel origin. Page reads are public; creating, updating, and deleting pages still require authentication.
+
+Fetch a page by ID:
+
+```text
+GET https://cms.example.com/api/pages/{id}?depth=2
+```
+
+Fetch a page by its generated slug:
+
+```text
+GET https://cms.example.com/api/pages?where[slug][equals]={slug}&limit=1&depth=2
+```
+
+The ID route returns the page document directly. The slug query returns a paginated response; the matching page is in `docs[0]`. `depth=2` populates related media and nested block data. Without a matching slug, `docs` is empty.
+
+Example PHP helper that fetches by slug:
+
+```php
+<?php
+function getPageBySlug(string $cmsBaseUrl, string $slug): ?array
+{
+    $query = http_build_query([
+        'where' => ['slug' => ['equals' => $slug]],
+        'limit' => 1,
+        'depth' => 2,
+    ]);
+    $url = rtrim($cmsBaseUrl, '/') . '/api/pages?' . $query;
+    $curl = curl_init($url);
+
+    curl_setopt_array($curl, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => false,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_HTTPHEADER => ['Accept: application/json'],
+    ]);
+
+    $body = curl_exec($curl);
+    $status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+    $error = curl_error($curl);
+    curl_close($curl);
+
+    if ($body === false) {
+        throw new RuntimeException('Could not connect to the CMS: ' . $error);
+    }
+    if ($status < 200 || $status >= 300) {
+        throw new RuntimeException('CMS returned HTTP ' . $status);
+    }
+
+    $result = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+    return $result['docs'][0] ?? null;
+}
+
+$page = getPageBySlug('https://cms.example.com', 'about-us');
+```
+
+The API response includes fields such as `title`, `slug`, `description`, `content`, and `sections`. Uploaded media includes its URL; if the CMS returns a relative URL, prefix it with the CMS origin when rendering it on the PHP site.
