@@ -99,7 +99,7 @@ export default buildConfig({
   }),
   endpoints: [enquiryAnalyticsEndpoint],
   sharp,
-  plugins: [
+  storage: [
     vercelBlobStorage({
       enabled: true,
       collections: {
@@ -110,7 +110,9 @@ export default buildConfig({
       clientUploads: false,
       // Keep the media schema identical whether or not a token is present.
       alwaysInsertFields: true,
-    }),
+    })
+  ],
+  plugins: [
     // SEO fields are added per collection (see seoTab in Pages and Courses);
     // the plugin provides the generate endpoints and admin UI components.
     seoPlugin({
