@@ -182,6 +182,8 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -801,6 +803,44 @@ export interface Course {
         }[]
       | null;
   };
+  /**
+   * Shown on the course page once a headline, description or feature is filled in.
+   */
+  whyChooseSection?: {
+    /**
+     * Completes "Why Choose ...?". Leave empty to use the course title.
+     */
+    highlight?: string | null;
+    headline?: string | null;
+    description?: string | null;
+    features?:
+      | {
+          title: string;
+          description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * For example, "365" and "Days Lab Access".
+     */
+    stats?:
+      | {
+          value: string;
+          label: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Leave empty to use the featured image.
+     */
+    media?: (number | null) | Media;
+    /**
+     * Leave empty to use the course title.
+     */
+    cardTitle?: string | null;
+    cardSubtitle?: string | null;
+    cardBadge?: string | null;
+  };
   videoSection?: {
     video?: (number | null) | Media;
     videoUrl?: string | null;
@@ -1253,6 +1293,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1639,6 +1681,31 @@ export interface CoursesSelect<T extends boolean = true> {
               iconText?: T;
               id?: T;
             };
+      };
+  whyChooseSection?:
+    | T
+    | {
+        highlight?: T;
+        headline?: T;
+        description?: T;
+        features?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+        media?: T;
+        cardTitle?: T;
+        cardSubtitle?: T;
+        cardBadge?: T;
       };
   videoSection?:
     | T

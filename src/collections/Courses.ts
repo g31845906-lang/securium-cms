@@ -180,6 +180,93 @@ export const Courses: CollectionConfig = {
               ],
             },
             {
+              name: 'whyChooseSection',
+              label: 'Why Choose Section',
+              type: 'group',
+              admin: {
+                description:
+                  'Shown on the course page once a headline, description or feature is filled in.',
+              },
+              fields: [
+                {
+                  name: 'highlight',
+                  label: 'Highlighted Name',
+                  type: 'text',
+                  admin: {
+                    description:
+                      'Completes "Why Choose ...?". Leave empty to use the course title.',
+                  },
+                },
+                {
+                  name: 'headline',
+                  type: 'text',
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                },
+                {
+                  name: 'features',
+                  type: 'array',
+                  fields: [
+                    {
+                      name: 'title',
+                      type: 'text',
+                      required: true,
+                    },
+                    {
+                      name: 'description',
+                      type: 'textarea',
+                    },
+                  ],
+                },
+                {
+                  name: 'stats',
+                  type: 'array',
+                  maxRows: 2,
+                  admin: {
+                    description: 'For example, "365" and "Days Lab Access".',
+                  },
+                  fields: [
+                    {
+                      name: 'value',
+                      type: 'text',
+                      required: true,
+                    },
+                    {
+                      name: 'label',
+                      type: 'text',
+                      required: true,
+                    },
+                  ],
+                },
+                {
+                  name: 'media',
+                  label: 'Card Video or Image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: {
+                    description: 'Leave empty to use the featured image.',
+                  },
+                },
+                {
+                  name: 'cardTitle',
+                  type: 'text',
+                  admin: {
+                    description: 'Leave empty to use the course title.',
+                  },
+                },
+                {
+                  name: 'cardSubtitle',
+                  type: 'text',
+                },
+                {
+                  name: 'cardBadge',
+                  type: 'text',
+                },
+              ],
+            },
+            {
               name: 'videoSection',
               label: 'Video Section',
               type: 'group',
