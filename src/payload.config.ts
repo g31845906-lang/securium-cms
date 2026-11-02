@@ -106,10 +106,8 @@ export default buildConfig({
         media: true,
       },
       token: process.env.BLOB_READ_WRITE_TOKEN,
-      // Start with this disabled for local testing
+       // Start with this disabled for local testing
       clientUploads: false,
-      // Keep the media schema identical whether or not a token is present.
-      alwaysInsertFields: true,
     }),
     // SEO fields are added per collection (see seoTab in Pages and Courses);
     // the plugin provides the generate endpoints and admin UI components.
